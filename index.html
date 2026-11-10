@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plataforma de Investigación de Operaciones II</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head><body>
+<nav><h1>Investigación de Operaciones II</h1>
+<a href="#inicio" data-s="inicio">Inicio</a><a href="#simplex" data-s="simplex">Método simplex</a><a href="#pnl" data-s="pnl">Programación no lineal</a><a href="#inventarios" data-s="inventarios">Control de inventarios</a><a href="#colas" data-s="colas">Líneas de espera</a></nav>
+<main>
+<section id="inicio"><h2>Plataforma de resolución</h2><p class="lead">Elige un módulo, captura los datos del problema y obtén la solución con su procedimiento.</p>
+<div class="home"><a href="#simplex"><b>Método simplex</b><span>Maximizar o minimizar con restricciones ≤, ≥ y =. Muestra cada tabla.</span></a><a href="#pnl"><b>Programación no lineal</b><span>Función objetivo y restricciones no lineales, con clasificación del punto.</span></a><a href="#inventarios"><b>Control de inventarios</b><span>EOQ, con faltantes y con producción. Punto de reorden.</span></a><a href="#colas"><b>Líneas de espera</b><span>M/M/1, M/M/s, M/M/1/K y M/G/1 con medidas de desempeño.</span></a></div></section>
+
+<section id="simplex"><h2>Método simplex</h2><p class="lead">Usa la técnica de la gran M cuando hay restricciones ≥ o =.</p>
+<div class="box"><div class="row"><div><label for="sobj">Objetivo</label><select id="sobj"><option value="max">Maximizar</option><option value="min">Minimizar</option></select></div><div><label for="sn">Variables</label><input id="sn" type="number" min="1" max="8" value="2"></div><div><label for="sm">Restricciones</label><input id="sm" type="number" min="1" max="8" value="3"></div></div>
+<div class="acts"><button class="alt" onclick="grid()">Actualizar tabla</button></div><div class="sc" id="sg"></div>
+<div class="acts"><button onclick="solveSimplex()">Resolver</button></div></div><div id="so"></div></section>
+
+<section id="pnl"><h2>Programación no lineal</h2><p class="lead">Escribe la función con las variables x, y, z. Usa ^ para potencias y funciones como sqrt, exp, log, sin.</p>
+<div class="box"><div class="row"><div><label for="pobj">Objetivo</label><select id="pobj"><option value="min">Minimizar</option><option value="max">Maximizar</option></select></div><div><label for="pn">Variables (1 a 3)</label><input id="pn" type="number" min="1" max="3" value="2"></div><div><label for="px0">Punto inicial</label><input id="px0" value="1, 1"></div></div>
+<label for="pf">f(x, y, z)</label><input id="pf" value="(x-3)^2 + (y+1)^2 + x*y"><br><br>
+<label for="pg">Restricciones, una por línea (usa &lt;=, &gt;= o =). Déjalo vacío si no hay.</label><textarea id="pg" rows="3"></textarea>
+<div class="acts"><button onclick="solvePNL()">Resolver</button><button class="alt" onclick="pex(1)">Ejemplo con restricción</button></div></div><div id="po"></div></section>
+
+<section id="inventarios"><h2>Control de inventarios</h2><p class="lead">Modelos determinísticos con demanda constante.</p>
+<div class="box"><div class="row"><div><label for="im">Modelo</label><select id="im" onchange="vis('im','i')"><option value="eoq">EOQ clásico</option><option value="fal">EOQ con faltantes</option><option value="epq">Lote de producción (EPQ)</option></select></div></div>
+<div class="row"><div><label for="iD">Demanda anual D</label><input id="iD" type="number" value="2000"></div><div><label for="iK">Costo por pedido Co</label><input id="iK" type="number" value="5"></div><div><label for="ih">Costo de mantener Ch (por unidad al año)</label><input id="ih" type="number" value="2"></div><div><label for="ic">Costo unitario (opcional)</label><input id="ic" type="number" value="0"></div>
+<div data-i="fal"><label for="ip">Costo de faltante p (por unidad al año)</label><input id="ip" type="number" value="6"></div><div data-i="epq" class="hide"><label for="iP">Tasa de producción P (al año)</label><input id="iP" type="number" value="5000"></div>
+<div><label for="iL">Tiempo de entrega (periodos)</label><input id="iL" type="number" value="1"></div><div><label for="iN">Periodos por año</label><input id="iN" type="number" value="52"></div></div>
+<div class="acts"><button onclick="solveInv()">Calcular</button></div></div><div id="io"></div></section>
+
+<section id="colas"><h2>Líneas de espera</h2><p class="lead">Tasas en la misma unidad de tiempo, por ejemplo clientes por hora.</p>
+<div class="box"><div class="row"><div><label for="qm">Modelo</label><select id="qm" onchange="vis('qm','q')"><option value="mm1">M/M/1</option><option value="mms">M/M/s</option><option value="mm1k">M/M/1/K</option><option value="mg1">M/G/1</option></select></div></div>
+<div class="row"><div><label for="ql">Tasa de llegadas λ</label><input id="ql" type="number" step="any" value="8"></div><div><label for="qu">Tasa de servicio μ (por servidor)</label><input id="qu" type="number" step="any" value="10"></div>
+<div data-q="mms" class="hide"><label for="qs">Servidores s</label><input id="qs" type="number" min="1" value="2"></div><div data-q="mm1k" class="hide"><label for="qk">Capacidad del sistema K</label><input id="qk" type="number" min="1" value="5"></div><div data-q="mg1" class="hide"><label for="qd">Desviación estándar del servicio σ</label><input id="qd" type="number" step="any" value="0.05"></div></div>
+<div class="acts"><button onclick="solveQ()">Calcular</button></div></div><div id="qo"></div></section>
+</main>
+<script src="app.js"></script></body></html>
